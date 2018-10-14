@@ -6,17 +6,18 @@
 
 <body>
 
-<h3> Select the team you want to analyze.</h3>
+<h3> Select the team you want to analyze. </h3>
+
 <br>
-<h3> Results will open in a new page</h3>
-<h3>Showing the average number of yards for a passing touchdown and rushing touchdown by that team over the period of 2014-2017</h3>
+
+<h3> Results will open in a new page </h3>
+<h3> Showing how efficient that team was in scoring over the period of 2001-2017 </h3>
 <br>
 <br>
 
-<form action=yards-per-touchdown.php>
-Choose team from all college football (FBS + FCS): <br>
+<form action = scoring-efficiency.php>
+ Choose team from all college football (FBS + FCS): <br>
  <select name="teamId">
- 
 
 <?php
 // Connecting, selecting database
@@ -43,4 +44,4 @@ pg_close($dbconn);
 
 </body>
 </html>
-  
+ 

@@ -12,15 +12,23 @@
 $myTeam = htmlspecialchars($_GET["teamId"]);
 $playType = htmlspecialchars($_GET["playtype"]);
 
+$dbconn = pg_connect("host=localhost dbname=cfb user=neville password=")
+    or die('Could not connect: ' . pg_last_error());
+
+
+$teamQuery = "SELECT team.school FROM team WHERE team.id = $myTeam";
+$teamResult = pg_query($teamQuery) or die('Query failed: ' . pg_last_error());
+while ($teamLine = pg_fetch_array($teamResult, null, PGSQL_ASSOC)) {
+$teamName = $teamLine[school];
+}
+
 $playDisplay = 'Rush';
 if ($playType == 67) $playDisplay = 'Pass';
 
 
-echo "<h1> $playDisplay TD details for $myTeam </h1><br>";
+echo "<h1> $playDisplay TD details for $teamName </h1><br>";
 
 
-$dbconn = pg_connect("host=localhost dbname=cfb user=neville password=")
-    or die('Could not connect: ' . pg_last_error());
 
 $offenseId=$myTeam;
 

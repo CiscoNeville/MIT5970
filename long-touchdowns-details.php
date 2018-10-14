@@ -23,33 +23,34 @@ $teamName = $teamLine[school];
 }
 
 
-
-echo "<h1>Yards per passing touchdown and rushing touchdown by $teamName </h1><br><br>";
+echo "<h1>70+ yard touchdowns by $teamName </h1><br><br>";
 
 
 
 $offenseId=$myTeam;
 
 
-$query = "select play_type_id, avg(yards_gained) as avg_yards from play where offense_id=$offenseId group by play_type_id having play_type_id=67 or play_type_id=68";
+$query = "SELECT play.yards_gained, play.play_type_id, team.school, play.play_text FROM play INNER JOIN team ON play.offense_id = team.id WHERE play.offense_id = $offenseId AND play.yards_gained >= 70 GROUP BY play.yards_gained, play.play_type_id, team.school, play.play_text HAVING play.play_type_id = 67 OR play.play_type_id = 68 ORDER BY play.yards_gained DESC";
 $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
 
-echo "<h3>Avg. yards per pass/rush touchdowns</h3>";
-echo "<h4>Click pass or rush for more details</h4>";
+echo "<h3>70+ yard touchdowns</h3>";
 echo "<table cellpadding=5>\n";
-echo "\t<tr><td>Pass/Rush TD</td><td></td><td>Avg. yards per TD</td></tr>";
+echo "\t<tr><td>Yards Gained</td><td></td><td>Pass/Rush TD</td><td></td><td>Play Text</td></tr>";
 while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
 
-$playType = 'Rush';
-if ($line[play_type_id] == 67) $playType = 'Pass';
-$yards = round($line[avg_yards]);
+$playDisplay = "Pass";
+if ($line[play_type_id] == 68) $playDisplay = "Rush";
+
 
     echo "\t<tr>\n";
- echo "\t\t<td><a href='/touchdown-details.php?teamId=$myTeam&playtype=$line[play_type_id]'>$playType</a></td>\n";
+ echo "\t\t<td>$line[yards_gained]</td>\n";
  echo "\t\t<td></td>\n";
- echo "\t\t<td>$yards</td>\n";
-     echo "\t</tr>\n";
+ echo "\t\t<td>$playDisplay</td>\n";
+ echo "\t\t<td></td>\n";
+ echo "\t\t<td>$line[play_text]</td>\n";
+    echo "\t</tr>\n";
+
 
 
 }
@@ -67,23 +68,3 @@ pg_close($dbconn);
 ?>
 
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
